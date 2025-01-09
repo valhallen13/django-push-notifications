@@ -331,10 +331,6 @@ def apns_send_bulk_message(
 				active=False
 			)
 
-		if len(errors) > 0:
-			msg = "One or more errors failed with errors: {}".format(", ".join(errors))
-			raise APNSError(msg)
-
 		return results
 
 	except ConnectionError as e:
@@ -380,7 +376,7 @@ async def _send_bulk_request(
 
 async def _send_request(apns, request):
 	try:
-		res = await asyncio.wait_for(apns.send_notification(request), timeout=1)
+		res = await asyncio.wait_for(apns.send_notification(request), timeout=2)
 		return request.device_token, res
 	except asyncio.TimeoutError:
 		return request.device_token, NotificationResult(
